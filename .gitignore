@@ -1,6 +1,6 @@
 .env
-.venv
+.venv/
 .vscode
-_pycache_/
+__pycache__/
 Plan/
 match_data.jsonl
