@@ -15,7 +15,7 @@ class Match():
 
         self.seen_match_ids = set()
         try:
-            with jsonlines.open("match_data.jsonl", mode = "r") as reader:
+            with jsonlines.open("data/match_data.jsonl", mode = "r") as reader:
                 for record in reader:
                     id = record.get("matchID")
                     if id:
@@ -59,7 +59,7 @@ class Match():
                         if stat in match_details:
                             wanted_match_details[stat] = match_details[stat]
 
-                    with jsonlines.open("match_data.jsonl", mode = "a") as writer:
+                    with jsonlines.open("data/match_data.jsonl", mode = "a") as writer:
                         writer.write(wanted_match_details)
                         self.seen_match_ids.add(match_id)
                     

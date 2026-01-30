@@ -3,4 +3,4 @@
 .vscode
 __pycache__/
 Plan/
-match_data.jsonl
+data/
