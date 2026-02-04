@@ -53,6 +53,44 @@ class Database():
         self.con.commit()
         return f"Imported {successful_import} rows successfully, with {failed_import} duplicates skipped"
     
+    def get_matches(self, puuid):
+        self.curs.execute("""SELECT 
+                                match_id,
+                                game_start_timestamp,
+                                champion_name,
+                                position,
+                                kills,
+                                deaths,
+                                assists,
+                                total_minions_killed,
+                                win
+                            FROM match_summary
+                            WHERE puuid = ?
+                            ORDER BY game_start_timestamp DESC
+                          """, (puuid,))
+        
+        rows = self.curs.fetchall()
+        return rows
+        
+    def get_champion_matches(self, puuid, champion):
+        self.curs.execute("""SELECT 
+                                match_id,
+                                game_start_timestamp,
+                                position,
+                                kills,
+                                deaths,
+                                assists,
+                                total_minions_killed,
+                                win
+                            FROM match_summary
+                            WHERE puuid = ?
+                                AND champion_name = ?
+                            ORDER BY game_start_timestamp DESC
+                          """, (puuid, champion))
+        
+        rows = self.curs.fetchall()
+        return rows
+
     def close(self):
         self.curs.close()
         self.con.close()

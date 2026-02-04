@@ -1,12 +1,11 @@
-from player_info import PlayerInfo
 import os
 from dotenv import load_dotenv
 import requests
 import time
 
 ## USES THE MATCH-V5 API FROM RIOT
-class MatchID:
-    def __init__(self, name, tag, region, queue):
+class MatchV5:
+    def __init__(self, puuid, region, queue):
         load_dotenv(override=True)
         try:
             self.api_key = os.getenv("RIOT_API_KEY")
@@ -25,8 +24,7 @@ class MatchID:
 
         self.region = region_hosts[region.lower()]
         self.queue = queue_type[queue.lower()]
-        self.player = PlayerInfo(name = name, tag = tag, region = region)
-        self.puuid = self.player.get_puuid()
+        self.puuid = puuid
 
         self.headers = {
             "X-Riot-Token": self.api_key

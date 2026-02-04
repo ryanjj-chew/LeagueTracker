@@ -1,18 +1,12 @@
-from match_history import MatchID
-from player_info import PlayerInfo
+from match_v5 import MatchV5
 import jsonlines
 
-class Match():
-    def __init__(self, name, tag, region, queue):
-        self.name = name
-        self.tag = tag
-        self.region = region.lower()
-        self.queue = queue.lower()
-
-        self.Player = MatchID(name = self.name, tag = self.tag, region = self.region, queue = self.queue)
-        self.PlayerInfo = PlayerInfo(name = self.name, tag = self.tag, region = self.region)
-        self.puuid = self.PlayerInfo.get_puuid()
-
+class MatchIngester():
+    def __init__(self, puuid, region, queue):
+        self.puuid = puuid
+        self.region = region
+        self.queue = queue
+        self.Player = MatchV5(puuid = self.puuid, region = self.region, queue = self.queue)
         self.seen_match_ids = set()
         try:
             with jsonlines.open("data/match_data.jsonl", mode = "r") as reader:
@@ -25,7 +19,7 @@ class Match():
 
         self.wanted_stats = ("championName", "individualPosition", "kills", "deaths", "assists", "totalMinionsKilled", "win")
     
-    def get_match(self):
+    def fetch_match(self):
         results = []
 
         start = 0
@@ -66,7 +60,7 @@ class Match():
                     results.append(wanted_match_details)
 
                 else:
-                    return results
+                    continue
                 
             start += page_size
 
