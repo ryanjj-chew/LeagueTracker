@@ -1,5 +1,6 @@
 from session import Session
 from database import Database
+from dataframe import Data
 
 session = Session(name = "Sorako Bot", tag = "Kek", region = "Europe", queue = "Ranked")
 puuid = session.get_puuid()
@@ -12,3 +13,7 @@ print(msg)
 rows = db.get_matches(puuid = puuid)
 print(rows)
 db.close()
+
+data = Data(rows = rows)
+data_rows = data.return_series()
+print(data_rows)
