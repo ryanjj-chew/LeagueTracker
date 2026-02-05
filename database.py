@@ -53,7 +53,7 @@ class Database():
         self.con.commit()
         return f"Imported {successful_import} rows successfully, with {failed_import} duplicates skipped"
     
-    def get_matches(self, puuid):
+    def get_matches(self, puuid, limit = 20):
         self.curs.execute("""SELECT 
                                 match_id,
                                 game_start_timestamp,
@@ -67,12 +67,13 @@ class Database():
                             FROM match_summary
                             WHERE puuid = ?
                             ORDER BY game_start_timestamp DESC
-                          """, (puuid,))
+                            LIMIT ?
+                          """, (puuid, limit,))
         
         rows = self.curs.fetchall()
         return rows
         
-    def get_champion_matches(self, puuid, champion):
+    def get_champion_matches(self, puuid, champion, limit = 20):
         self.curs.execute("""SELECT 
                                 match_id,
                                 game_start_timestamp,
@@ -86,7 +87,8 @@ class Database():
                             WHERE puuid = ?
                                 AND champion_name = ?
                             ORDER BY game_start_timestamp DESC
-                          """, (puuid, champion))
+                            LIMIT ?
+                          """, (puuid, champion, limit,))
         
         rows = self.curs.fetchall()
         return rows

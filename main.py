@@ -5,7 +5,7 @@ session = Session(name = "Sorako Bot", tag = "Kek", region = "Europe", queue = "
 puuid = session.get_puuid()
 match_history = session.fetch_match()
 
-db = Database(puuid = puuid)
+db = Database()
 db.create_table()
 msg = db.update_table()
 print(msg)
