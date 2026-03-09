@@ -26,9 +26,7 @@ class MatchV5:
         self.queue = queue_type[queue.lower()]
         self.puuid = puuid
 
-        self.headers = {
-            "X-Riot-Token": self.api_key
-        }
+        self.headers = {"X-Riot-Token": self.api_key}
 
     def match_ids(self, startTime = None, endTime = None, queue = None, type = None, start = None, count = None):
         actual_queue = queue if queue is not None else self.queue
