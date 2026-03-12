@@ -2,6 +2,7 @@ from player_info import PlayerInfo
 from match_ingester import MatchIngester
 from match_v5 import MatchV5
 from timeline import Timeline
+import jsonlines
 
 class Session():
     def __init__(self, name , tag , region, queue):
@@ -28,3 +29,36 @@ class Session():
     def get_timeline(self, match_id):
         timeline_stats = self.timeline.stats(match_id)
         return timeline_stats
+    
+    def update_timeline(self):
+        seen_match_ids = set()
+        added = 0
+        skipped = 0
+        with jsonlines.open("data/match_timeline.jsonl") as reader:
+            for record in reader:
+                match_id = record[0].get("match_id")
+                seen_match_ids.add(match_id)
+
+        with jsonlines.open("data/match_data.jsonl") as reader:
+            with jsonlines.open("data/match_timeline.jsonl", mode = "a") as writer:
+
+                for record in reader:
+                    match_id = record.get("matchID")
+                    print(f"Checking match: {match_id}")
+
+                    if match_id in seen_match_ids:
+                        print(f"Skipping: {match_id}")
+                        skipped += 1
+                        continue
+
+                    try:
+                        timeline_stats = self.get_timeline(match_id)
+                        writer.write(timeline_stats)
+                        seen_match_ids.add(match_id)
+                        print(f"Added timeline for {match_id}")
+                        added += 1
+
+                    except FileNotFoundError:
+                        continue
+        print(f"Added: {added}, Skipped: {skipped}")
+        return

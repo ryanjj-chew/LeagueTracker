@@ -92,6 +92,47 @@ class Database():
         
         rows = self.curs.fetchall()
         return rows
+    
+    def create_player_timeline(self):
+        self.curs.execute("""CREATE TABLE IF NOT EXISTS player_timeline (
+                            match_id TEXT,
+                            minute INTEGER,
+                            cs INTEGER,
+                            gold INTEGER,
+                            xp INTEGER,
+                            level INTEGER,
+                            PRIMARY KEY(match_id, minute),
+                            FOREIGN KEY(match_id) REFERENCES match_summary(match_id)
+                          )""")
+
+    def update_player_timeline(self):
+        successful_import = 0
+        failed_import = 0
+        with jsonlines.open("data/match_timeline.jsonl") as reader:
+            for record in reader:
+                try:
+                    for frame in record:
+                        row = (
+                            frame["match_id"],
+                            frame["minute"],
+                            frame["cs"],
+                            frame["gold"],
+                            frame["xp"],
+                            frame["level"]
+                        )
+                        self.curs.execute("""INSERT OR IGNORE INTO player_timeline
+                                        VALUES (?,?,?,?,?,?)""", row)
+                        
+                        if self.curs.rowcount == 1:
+                            successful_import += 1
+                        else:
+                            failed_import += 1
+
+                except KeyError:
+                    continue
+
+        self.con.commit()
+        return f"Imported {successful_import} rows successfully, with {failed_import} duplicates skipped"
 
     def close(self):
         self.curs.close()
