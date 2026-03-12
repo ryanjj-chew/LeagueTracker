@@ -4,6 +4,7 @@ import jsonlines
 class Database():
     def __init__(self, db_path = "data/matches.db"):
         self.con = sqlite3.connect(db_path)
+        self.con.row_factory = sqlite3.Row
         self.curs = self.con.cursor()
 
     def create_table(self):
@@ -93,7 +94,7 @@ class Database():
         rows = self.curs.fetchall()
         return rows
     
-    def create_player_timeline(self):
+    def create_self_player_timeline(self):
         self.curs.execute("""CREATE TABLE IF NOT EXISTS player_timeline (
                             match_id TEXT,
                             minute INTEGER,
@@ -105,7 +106,7 @@ class Database():
                             FOREIGN KEY(match_id) REFERENCES match_summary(match_id)
                           )""")
 
-    def update_player_timeline(self):
+    def update_self_player_timeline(self):
         successful_import = 0
         failed_import = 0
         with jsonlines.open("data/match_timeline.jsonl") as reader:
@@ -133,6 +134,20 @@ class Database():
 
         self.con.commit()
         return f"Imported {successful_import} rows successfully, with {failed_import} duplicates skipped"
+
+    def get_match_timeline(self, match_id):
+        self.curs.execute("""SELECT
+                                minute,
+                                cs,
+                                gold,
+                                xp,
+                                level
+                            FROM player_timeline
+                            WHERE match_id = ?
+                            ORDER BY minute ASC
+                          """, (match_id,))
+        rows = self.curs.fetchall()
+        return rows
 
     def close(self):
         self.curs.close()
