@@ -1,12 +1,43 @@
 import pandas as pd
 import numpy as np
+from database import Database
 
 class Data():
-    def __init__(self, rows):
-        self.df = pd.DataFrame(rows, columns = ["match_id", "game_start_timestamp", "champion_name", "position", "kills", "deaths", "assists", "total_minions_killed", "win"])
-        self.df["kda"] = ((self.df["kills"] + self.df["assists"]) / self.df["deaths"].replace(0,1)).round(1)
-        self.df["game_time"] = pd.to_datetime(self.df["game_start_timestamp"], unit = "ms")
+    def __init__(self):
+        self.db = Database()
+
+    def return_stats(self, puuid, limit = 20):
+        rows = [dict(row) for row in self.db.get_matches(puuid, limit)]
+        df = pd.DataFrame(rows)
+        if df.empty:
+            return df
+        
+        df["cs"] = df["total_minions_killed"] + df["neutral_minions_killed"]
+        df["kda"] = ((df["kills"] + df["assists"]) / df["deaths"].replace(0,1)).round(1)
+        df["game_start_time"] = pd.to_datetime(df["game_start_timestamp"], unit = "ms")
+        df.drop(columns=["total_minions_killed", "neutral_minions_killed", "game_start_timestamp"], inplace=True)
+        return df
     
-    def return_series(self):
-        self.df.sort_values("game_time")
-        return self.df
+    def return_champion_stats(self, puuid, champion, limit = 20):
+        champion = champion.replace(" ", "")
+        rows = [dict(row) for row in self.db.get_champion_matches(puuid, champion, limit)]
+        df = pd.DataFrame(rows)
+        if df.empty:
+            return df
+        
+        df["cs"] = df["total_minions_killed"] + df["neutral_minions_killed"]
+        df["kda"] = ((df["kills"] + df["assists"]) / df["deaths"].replace(0,1)).round(1)
+        df["game_start_time"] = pd.to_datetime(df["game_start_timestamp"], unit = "ms")
+        df.drop(columns=["total_minions_killed", "neutral_minions_killed", "game_start_timestamp"], inplace=True)
+        return df
+    
+    def return_role_stats(self, puuid, position, limit = 20):
+        rows = [dict(row) for row in self.db.get_role_matches(puuid, position, limit)]
+        df = pd.DataFrame(rows)
+        if df.empty:
+            return df
+        df["cs"] = df["total_minions_killed"] + df["neutral_minions_killed"]
+        df["kda"] = ((df["kills"] + df["assists"]) / df["deaths"].replace(0,1)).round(1)
+        df["game_start_time"] = pd.to_datetime(df["game_start_timestamp"], unit = "ms")
+        df.drop(columns=["total_minions_killed", "neutral_minions_killed", "game_start_timestamp"], inplace=True)
+        return df

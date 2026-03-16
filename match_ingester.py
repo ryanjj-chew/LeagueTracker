@@ -17,7 +17,7 @@ class MatchIngester():
         except FileNotFoundError:
             pass
 
-        self.wanted_stats = ("championName", "individualPosition", "kills", "deaths", "assists", "totalMinionsKilled", "win")
+        self.wanted_stats = ("championName", "individualPosition", "kills", "deaths", "assists", "totalMinionsKilled", "neutralMinionsKilled", "win")
     
     def fetch_match(self):
         results = []
@@ -52,11 +52,12 @@ class MatchIngester():
                     for stat in self.wanted_stats:
                         if stat in match_details:
                             wanted_match_details[stat] = match_details[stat]
+                    wanted_match_details["csBefore10Minutes"] = int(round(match_details.get("challenges", {}).get("jungleCsBefore10Minutes"))) + int(round(match_details.get("challenges", {}).get("laneMinionsFirst10Minutes")))
 
                     with jsonlines.open("data/match_data.jsonl", mode = "a") as writer:
                         writer.write(wanted_match_details)
                         self.seen_match_ids.add(match_id)
-                    
+                        print(f"Added match details for {match_id}")
                     results.append(wanted_match_details)
 
                 else:

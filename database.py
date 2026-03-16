@@ -18,6 +18,8 @@ class Database():
                          deaths INTEGER,
                          assists INTEGER,
                          total_minions_killed INTEGER,
+                         neutral_minions_killed INTEGER,
+                         cs_before_10_minutes INTEGER,
                          win INTEGER NOT NULL
                          )""")
 
@@ -38,10 +40,12 @@ class Database():
                         record["deaths"],
                         record["assists"],
                         record["totalMinionsKilled"],
+                        record["neutralMinionsKilled"],
+                        record["csBefore10Minutes"],
                         win_int
                     )
                     self.curs.execute("""INSERT OR IGNORE INTO match_summary 
-                                    VALUES (?,?,?,?,?,?,?,?,?,?)""", row)
+                                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""", row)
                     
                     if self.curs.rowcount == 1:
                         successful_import += 1
@@ -64,6 +68,8 @@ class Database():
                                 deaths,
                                 assists,
                                 total_minions_killed,
+                                neutral_minions_killed,
+                                cs_before_10_minutes,
                                 win
                             FROM match_summary
                             WHERE puuid = ?
@@ -83,14 +89,37 @@ class Database():
                                 deaths,
                                 assists,
                                 total_minions_killed,
+                                neutral_minions_killed,
+                                cs_before_10_minutes,
                                 win
                             FROM match_summary
                             WHERE puuid = ?
-                                AND champion_name = ?
+                                AND champion_name = ? COLLATE NOCASE
                             ORDER BY game_start_timestamp DESC
                             LIMIT ?
                           """, (puuid, champion, limit,))
         
+        rows = self.curs.fetchall()
+        return rows
+    
+    def get_role_matches(self, puuid, position, limit = 20):
+        self.curs.execute("""SELECT
+                                match_id,
+                                game_start_timestamp,
+                                champion_name,
+                                kills,
+                                deaths,
+                                assists,
+                                total_minions_killed,
+                                neutral_minions_killed,
+                                cs_before_10_minutes,
+                                win
+                            FROM match_summary
+                            WHERE puuid = ?
+                                AND position = ? COLLATE NOCASE
+                            ORDER BY game_start_timestamp DESC
+                            LIMIT ?
+                          """, (puuid, position, limit,))
         rows = self.curs.fetchall()
         return rows
     

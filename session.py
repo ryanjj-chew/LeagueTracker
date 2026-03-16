@@ -34,10 +34,13 @@ class Session():
         seen_match_ids = set()
         added = 0
         skipped = 0
-        with jsonlines.open("data/match_timeline.jsonl") as reader:
-            for record in reader:
-                match_id = record[0].get("match_id")
-                seen_match_ids.add(match_id)
+        try:
+            with jsonlines.open("data/match_timeline.jsonl") as reader:
+                for record in reader:
+                    match_id = record[0].get("match_id")
+                    seen_match_ids.add(match_id)
+        except FileNotFoundError:
+            pass
 
         with jsonlines.open("data/match_data.jsonl") as reader:
             with jsonlines.open("data/match_timeline.jsonl", mode = "a") as writer:
