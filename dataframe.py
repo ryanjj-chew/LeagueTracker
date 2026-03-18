@@ -41,3 +41,6 @@ class Data():
         df["game_start_time"] = pd.to_datetime(df["game_start_timestamp"], unit = "ms")
         df.drop(columns=["total_minions_killed", "neutral_minions_killed", "game_start_timestamp"], inplace=True)
         return df
+    
+    def return_timeline_stats(self, puuid, match_id):
+        return

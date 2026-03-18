@@ -131,6 +131,10 @@ class Database():
                             gold INTEGER,
                             xp INTEGER,
                             level INTEGER,
+                            player_team_gold INTEGER,
+                            enemy_team_gold INTEGER,
+                            player_team_xp INTEGER,
+                            enemy_team_xp INTEGER,
                             PRIMARY KEY(match_id, minute),
                             FOREIGN KEY(match_id) REFERENCES match_summary(match_id)
                           )""")
@@ -148,10 +152,14 @@ class Database():
                             frame["cs"],
                             frame["gold"],
                             frame["xp"],
-                            frame["level"]
+                            frame["level"],
+                            frame["player_team_gold"],
+                            frame["enemy_team_gold"],
+                            frame["player_team_xp"],
+                            frame["enemy_team_xp"]
                         )
                         self.curs.execute("""INSERT OR IGNORE INTO player_timeline
-                                        VALUES (?,?,?,?,?,?)""", row)
+                                        VALUES (?,?,?,?,?,?,?,?,?,?)""", row)
                         
                         if self.curs.rowcount == 1:
                             successful_import += 1
@@ -170,7 +178,11 @@ class Database():
                                 cs,
                                 gold,
                                 xp,
-                                level
+                                level,
+                                player_team_gold,
+                                player_team_xp,
+                                enemy_team_gold,
+                                enemy_team_xp
                             FROM player_timeline
                             WHERE match_id = ?
                             ORDER BY minute ASC

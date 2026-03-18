@@ -1,5 +1,6 @@
 from session import Session
 from database import Database
+from dataframe import Data
 
 session = Session(name = "Sorako Bot", tag = "Kek", region = "Europe", queue = "Ranked")
 puuid = session.get_puuid()
