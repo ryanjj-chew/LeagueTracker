@@ -2,6 +2,7 @@ from player_info import PlayerInfo
 from match_ingester import MatchIngester
 from match_v5 import MatchV5
 from timeline import Timeline
+from dataframe import Data
 import jsonlines
 
 class Session():
@@ -12,6 +13,7 @@ class Session():
         self.puuid = self.player.get_puuid()
         self.match_ingester = MatchIngester(puuid = self.puuid, region = self.region, queue = self.queue)
         self.timeline = Timeline(puuid = self.puuid, region = self.region)
+        self.data = Data()
 
     def get_puuid(self):
         return self.puuid
@@ -65,3 +67,7 @@ class Session():
                         continue
         print(f"Added: {added}, Skipped: {skipped}")
         return
+    
+    def get_timeline(self, match_id):
+        stat = self.data.return_timeline_stats(match_id)
+        return stat
