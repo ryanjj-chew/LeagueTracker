@@ -42,5 +42,9 @@ class Data():
         df.drop(columns=["total_minions_killed", "neutral_minions_killed", "game_start_timestamp"], inplace=True)
         return df
     
-    def return_timeline_stats(self, puuid, match_id):
-        return
+    def return_timeline_stats(self, match_id):
+        rows = [dict(row) for row in self.db.get_match_timeline(match_id)]
+        df = pd.DataFrame(rows)
+        if df.empty:
+            return df
+        return df
