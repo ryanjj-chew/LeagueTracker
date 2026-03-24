@@ -25,12 +25,10 @@ class Session():
         return self.queue
 
     def fetch_match(self):
-        self.match = self.match_ingester.fetch_match()
-        return self.match
+        return self.match_ingester.fetch_match()
 
-    def get_timeline(self, match_id):
-        timeline_stats = self.timeline.stats(match_id)
-        return timeline_stats
+    def fetch_timeline(self, match_id):
+        return self.timeline.stats(match_id)
     
     def update_timeline(self):
         seen_match_ids = set()
@@ -57,7 +55,7 @@ class Session():
                         continue
 
                     try:
-                        timeline_stats = self.get_timeline(match_id)
+                        timeline_stats = self.fetch_timeline(match_id)
                         writer.write(timeline_stats)
                         seen_match_ids.add(match_id)
                         print(f"Added timeline for {match_id}")
@@ -69,5 +67,4 @@ class Session():
         return
     
     def get_timeline(self, match_id):
-        stat = self.data.return_timeline_stats(match_id)
-        return stat
+        return self.data.return_timeline_stats(match_id)
