@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block content %}
+    <p><h1>League of Legends Stat Viewer</h1></p>
+
+    <form method="POST">
+    {{ form.hidden_tag() }}
+
+    {{ form.champion_name.label }}
+    {{ form.champion_name(list="champions") }}
+
+    <datalist id="champions">
+        {% for champion in champions %}
+            <option value="{{ champion.name }}">
+        {% endfor %}
+    </datalist>
+    <br/>
+    {{ form.submit() }}
+    </form>
+
+    <!-- Add a place to show query stats-->
+    {% if query %}
+        {% for match in query %}
+            <div>
+                <p>Match ID: {{ match["match_id"] }}</p>
+                <p>Kills: {{ match["kills"] }}</p>
+                <br/>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No match found</p>
+    {% endif %}
+
+
+{% endblock %}
