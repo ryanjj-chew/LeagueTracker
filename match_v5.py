@@ -46,7 +46,7 @@ class MatchV5:
     def match(self, match_id):
         api = f"{self.region}/lol/match/v5/matches/{match_id}"
         response = requests.get(api, headers = self.headers)
-        time.sleep(1) # Sleep for 1s to prevent rate limit exceeded
+        time.sleep(1.5) # Sleep for 1s to prevent rate limit exceeded
         if response.status_code == 200:
             return response.json()
         else:

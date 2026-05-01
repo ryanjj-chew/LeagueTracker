@@ -24,16 +24,19 @@ Index
 
     <!-- Add a place to show query stats-->
     {% if query %}
+    <p>Match History</p>
+    <div class="grid">
         {% for match in query %}
-            <div>
-                <p>Match ID: {{ match["match_id"] }}</p>
-                <p>Kills: {{ match["kills"] }}</p>
+            <div class="card">
+                <p><strong>Match ID: </strong>{{ match.match_id }}</p>
+                <p><strong>KDA: </strong>{{ match.kills }}</p>
+                <p><strong>CS: </strong>{{ match.cs }}</p>
+                <p><strong>Result: </strong>{{ "Win" if match.win else "Loss" }}</p>
                 <br/>
             </div>
         {% endfor %}
-    {% else %}
-        <p>No match found</p>
     {% endif %}
+    </div>
 
 
 {% endblock %}

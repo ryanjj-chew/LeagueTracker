@@ -63,8 +63,8 @@ class Session():
 
                     except FileNotFoundError:
                         continue
-        print(f"Added: {added}, Skipped: {skipped}")
-        return
+        status = f"Added: {added}, Skipped: {skipped}"
+        return status
     
     def get_timeline(self, match_id):
         return self.data.return_timeline_stats(match_id)

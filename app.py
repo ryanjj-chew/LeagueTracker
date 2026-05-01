@@ -5,6 +5,7 @@ from wtforms import StringField, SelectField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, ValidationError
 from database import Database
 from session_flask import Session
+from dataframe_flask import Data_Flask
 
 
 app = Flask(__name__)
@@ -69,9 +70,12 @@ def Index():
         queue = settings["queue"]
         puuid = settings.get("puuid", "")
         
-        rows = db.get_champion_matches(puuid=puuid, champion=champion_id)
-        query = [dict(row) for row in rows]
+        rows = db.get_champion_matches(puuid=puuid, champion=champion_id)        
         db.close()
+
+        data = Data_Flask(rows)
+        query = data.return_stats()
+        print(query)
 
     return render_template("index.html", champions=champions, form=form, query=query)
 
@@ -80,22 +84,21 @@ def Index():
 def Update():
     form = UpdateForm()
     
-    status_table = ""
-    status_timeline = ""
+    status = ""
 
     if form.submit.data:
         with open("data/settings.json", "r") as file:
             data = json.load(file)
         session = Session(name=data["riot_id"], tag=data["tag"], region=data["region"],api_key=data["api_key"], queue="Ranked")
         match_history = session.fetch_match()
-        session.update_timeline()
+        status = session.update_timeline()
 
         db = Database()
-        status_table = db.update_table()
-        status_timeline = db.update_self_player_timeline()
+        db.update_table()
+        db.update_self_player_timeline()
         db.close()
 
-    return render_template("update.html", form=form, status=f"{status_table} | {status_timeline}")
+    return render_template("update.html", form=form, status=status)
 
 @app.route("/settings", methods=["GET", "POST"])
 def Settings():

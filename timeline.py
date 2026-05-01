@@ -21,7 +21,7 @@ class Timeline:
         api = f"https://{self.region}.api.riotgames.com/lol/match/v5/matches/{match_id}/timeline"
         response = requests.get(api, headers = self.headers)
         if response.status_code == 200:
-            time.sleep(1)
+            time.sleep(1.5)
             return response.json()
         elif response.status_code == 429:
             time.sleep(10)
