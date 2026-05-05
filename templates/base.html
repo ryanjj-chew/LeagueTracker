@@ -2,13 +2,22 @@
 <html>
     <head>
         <title>{% block title %}League Stats Viewer{% endblock %}</title>
-        <link rel="stylesheet" href="static/style.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
-        <header>
-            {% include "navigation.html" %}
-        </header>
-        {% block content %}
-        {% endblock %}
+        
+        <div class="bg" style="background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0,0,0,0.65)), url('{{ bg }}');"></div>
+
+        <main class="page">
+            <header>
+                {% include "navigation.html" %}
+            </header>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="footer">
+            League Stat Tracker is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc
+        </footer>
     </body>
 </html>

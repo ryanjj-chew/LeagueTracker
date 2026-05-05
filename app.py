@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, ValidationError
 from database import Database
 from session_flask import Session
 from dataframe_flask import Data_Flask
-
+from background_images import random_bg
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "BxGWP%wez3EG&0kK£"
@@ -44,10 +44,10 @@ class PuuidForm(FlaskForm):
 
 class ChampionForm(FlaskForm):
     champion_name = StringField("Champion:", validators=[DataRequired(), validate_champion])
-    submit = SubmitField("Search")
+    champion_submit = SubmitField("Search")
 
 class UpdateForm(FlaskForm):
-    submit = SubmitField("Update matches")
+    update_submit = SubmitField("Update matches")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -57,8 +57,10 @@ def Index():
     champions = load_champions()
     query = ""
     status = ""
+    
+    bg = random_bg()
 
-    if form_update.submit.data and form_update.validate_on_submit():
+    if form_update.update_submit.data and form_update.validate_on_submit():
         with open("data/settings.json", "r") as file:
             data = json.load(file)
         session = Session(name=data["riot_id"], tag=data["tag"], region=data["region"],api_key=data["api_key"], queue="Ranked")
@@ -70,7 +72,7 @@ def Index():
         db.update_self_player_timeline()
         db.close()
 
-    if form.submit.data and form.validate_on_submit():
+    if form.champion_submit.data and form.validate_on_submit():
         champion_id = form.champion_id
         db = Database()
 
@@ -111,7 +113,7 @@ def Index():
         query = data.return_stats()
         print(query)
 
-    return render_template("index.html", champions=champions, form=form, form_update=form_update, query=query, status=status)
+    return render_template("index.html", bg=bg, champions=champions, form=form, form_update=form_update, query=query, status=status)
 
 
 @app.route("/settings", methods=["GET", "POST"])

@@ -7,6 +7,8 @@ Index
 {% block content %}
     <p><h1>League of Legends Stat Viewer</h1></p>
 
+    <!-- Add in Player name in if block -->
+
     <div class="form">
         <form method="POST" class="champion-form">
         {{ form.hidden_tag() }}
@@ -19,13 +21,12 @@ Index
                 <option value="{{ champion.name }}">
             {% endfor %}
         </datalist>
-        <br/>
-        {{ form.submit() }}
+        {{ form.champion_submit() }}
         </form>
 
         <form method="POST" class="update-form">
             {{ form_update.hidden_tag() }}
-            {{ form_update.submit() }}
+            {{ form_update.update_submit() }}
             {% if status %}
                 <p>{{ status }}</p>
             {% endif %}

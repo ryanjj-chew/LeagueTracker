@@ -1,12 +1,31 @@
 body {
-    background-color: rgb(39, 37, 37);
     color: rgb(228, 232, 235);
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    background-color: rgb(39, 37, 37);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: blur(0.5px);
+    transform: scale(1.05);
 }
 
 .navbar {
     display: flex;
-    padding: 20px;
     gap: 10px;
 }
 
@@ -15,6 +34,7 @@ body {
     color: rgb(228, 232, 235);
     background-color: rgb(26, 28, 31);
     padding: 10px;
+    border: 2px solid rgb(61, 61, 61);
     border-radius: 5px;
 }
 
@@ -65,12 +85,14 @@ body {
     background-color: rgb(44, 97, 150);
     transform: scale(1.005);
     cursor: pointer;
+    transition: 0.15s ease;
 }
 
 .match.loss:hover{
     background-color: rgb(155, 47, 47);
     transform: scale(1.005);
     cursor: pointer;
+    transition: 0.15s ease;
 }
 
 .match.win {
@@ -129,4 +151,74 @@ body {
     font-size: larger;
     font-weight: bold;
     color: #ff191d;
+}
+
+.form {
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 30px;
+}
+
+.champion-form,
+.update-form {
+    font: bold;
+    background-color: rgb(26, 28, 31);
+    border: 2px solid rgb(44, 97, 150);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.form input[type="text"] {
+    background-color: rgb(49, 52, 58);
+    color: aliceblue;
+
+    border: 2px solid rgb(70, 80, 100);
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 5px 8px;
+    width: 100px;
+    
+    outline: none;
+}
+
+.form input[type="text"]:focus {
+    background-color: rgb(49, 52, 58);
+    color: aliceblue;
+    border-color: rgb(44, 97, 150);
+    box-shadow: 0 0 5px rgba(44, 97, 150, 0.5);
+    font-size: 14px;
+}
+
+.form input:-webkit-autofill,
+.form input:-webkit-autofill:hover,
+.form input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(49, 52, 58) inset; /* forces background */
+    -webkit-text-fill-color: aliceblue;             /* fixes text color */
+    transition: background-color 5000s ease-in-out 0s;        /* prevents flash */
+    font-size: 14px;
+}
+
+.form input[type="submit"] {
+    background-color: rgb(44, 97, 150);
+    color: aliceblue;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.form input[type="submit"]:hover {
+    background-color: rgb(39, 80, 121);
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.form input[type="submit"]:active {
+    background-color: rgb(30, 69, 109);
+}
+
+.footer {
+    font-size: 12px;
+    width: 800px;
 }
