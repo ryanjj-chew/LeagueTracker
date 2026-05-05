@@ -1,5 +1,7 @@
 <nav>
-    {% for menu_item in ["Index", "Settings", "Update"] %}
-        <a href="{{ url_for(menu_item) }}">{{ menu_item }}</a>
-    {% endfor %}
+    <div class="navbar">
+        {% for menu_item in ["Index", "Settings"] %}
+            <a href="{{ url_for(menu_item) }}">{{ menu_item }}</a>
+        {% endfor %}
+    </div>
 </nav>

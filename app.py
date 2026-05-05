@@ -53,8 +53,22 @@ class UpdateForm(FlaskForm):
 @app.route("/", methods=["GET", "POST"])
 def Index():
     form = ChampionForm()
+    form_update = UpdateForm()
     champions = load_champions()
     query = ""
+    status = ""
+
+    if form_update.submit.data and form_update.validate_on_submit():
+        with open("data/settings.json", "r") as file:
+            data = json.load(file)
+        session = Session(name=data["riot_id"], tag=data["tag"], region=data["region"],api_key=data["api_key"], queue="Ranked")
+        match_history = session.fetch_match()
+        status = session.update_timeline()
+
+        db = Database()
+        db.update_table()
+        db.update_self_player_timeline()
+        db.close()
 
     if form.submit.data and form.validate_on_submit():
         champion_id = form.champion_id
@@ -76,29 +90,29 @@ def Index():
         data = Data_Flask(rows)
         query = data.return_stats()
         print(query)
-
-    return render_template("index.html", champions=champions, form=form, query=query)
-
-
-@app.route("/update", methods=["GET", "POST"])
-def Update():
-    form = UpdateForm()
     
-    status = ""
-
-    if form.submit.data:
-        with open("data/settings.json", "r") as file:
-            data = json.load(file)
-        session = Session(name=data["riot_id"], tag=data["tag"], region=data["region"],api_key=data["api_key"], queue="Ranked")
-        match_history = session.fetch_match()
-        status = session.update_timeline()
-
+    else:
         db = Database()
-        db.update_table()
-        db.update_self_player_timeline()
+        
+        with open("data/settings.json", "r") as file:
+            settings = json.load(file)
+        
+        riot_id = settings["riot_id"]
+        tag = settings["tag"]
+        region = settings["region"]
+        api_key = settings["api_key"]
+        queue = settings["queue"]
+        puuid = settings.get("puuid", "")
+
+        rows = db.get_matches(puuid=puuid)
         db.close()
 
-    return render_template("update.html", form=form, status=status)
+        data = Data_Flask(rows)
+        query = data.return_stats()
+        print(query)
+
+    return render_template("index.html", champions=champions, form=form, form_update=form_update, query=query, status=status)
+
 
 @app.route("/settings", methods=["GET", "POST"])
 def Settings():
@@ -146,6 +160,11 @@ def Settings():
             
     
     return render_template("settings.html", data=data, form_settings=form_settings, form_puuid=form_puuid)
+
+@app.route("/<match_id>")
+def match_details(match_id):
+    print(match_id)
+    return f"{match_id}"
 
 if __name__ == "__main__":
     app.run(debug=True)

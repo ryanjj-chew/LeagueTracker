@@ -1,0 +1,132 @@
+body {
+    background-color: rgb(39, 37, 37);
+    color: rgb(228, 232, 235);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+    display: flex;
+    padding: 20px;
+    gap: 10px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: rgb(228, 232, 235);
+    background-color: rgb(26, 28, 31);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.navbar a:hover {
+    background-color: rgb(11, 12, 14);
+}
+
+.match-container {
+    max-width: 670px;
+    
+}
+
+.match {
+    display: grid;
+    grid-template-columns: 140px 100px 100px 200px 70px;
+    align-items: center;
+
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;  
+
+    min-height: 0;
+    line-height: 1.1;
+
+    color: rgb(234, 243, 253);
+    opacity: 85%;
+}
+
+.match-link {
+    text-decoration: none;
+}
+
+.match-link:hover {
+    text-decoration: none;
+}
+
+.match >* {
+    transform: translateY(7px);
+}
+
+.match p,
+.match span {
+    margin: 0;
+}
+
+
+.match.win:hover {
+    background-color: rgb(44, 97, 150);
+    transform: scale(1.005);
+    cursor: pointer;
+}
+
+.match.loss:hover{
+    background-color: rgb(155, 47, 47);
+    transform: scale(1.005);
+    cursor: pointer;
+}
+
+.match.win {
+    background-color: #243368;  
+    border: 3px solid rgb(44, 97, 150);
+}
+
+.match.loss {
+    background-color: rgb(105, 37, 37);
+    border: 3px solid rgb(155, 47, 47);
+}
+
+
+.icon-row {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.champion-icon {
+    width: 40px;
+    height: auto;
+}
+
+.role-icon {
+    width: 25px;
+    height: auto;
+}
+
+.kda {
+    white-space: nowrap;
+}
+
+.cs {
+    white-space: nowrap;
+}
+
+.match-date {
+    white-space: nowrap;
+}
+
+.match-status {
+    width: 60px;
+    margin: 2px;
+    text-align: center;
+}
+
+.match-status.win {
+    font-size: larger;
+    font-weight: bold;
+    color: rgb(31, 143, 255);
+}
+
+.match-status.loss {
+    font-size: larger;
+    font-weight: bold;
+    color: #ff191d;
+}

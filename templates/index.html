@@ -7,33 +7,66 @@ Index
 {% block content %}
     <p><h1>League of Legends Stat Viewer</h1></p>
 
-    <form method="POST">
-    {{ form.hidden_tag() }}
+    <div class="form">
+        <form method="POST" class="champion-form">
+        {{ form.hidden_tag() }}
 
-    {{ form.champion_name.label }}
-    {{ form.champion_name(list="champions") }}
+        {{ form.champion_name.label }}
+        {{ form.champion_name(list="champions") }}
 
-    <datalist id="champions">
-        {% for champion in champions %}
-            <option value="{{ champion.name }}">
-        {% endfor %}
-    </datalist>
-    <br/>
-    {{ form.submit() }}
-    </form>
+        <datalist id="champions">
+            {% for champion in champions %}
+                <option value="{{ champion.name }}">
+            {% endfor %}
+        </datalist>
+        <br/>
+        {{ form.submit() }}
+        </form>
+
+        <form method="POST" class="update-form">
+            {{ form_update.hidden_tag() }}
+            {{ form_update.submit() }}
+            {% if status %}
+                <p>{{ status }}</p>
+            {% endif %}
+        </form>
+    </div>
 
     <!-- Add a place to show query stats-->
     {% if query %}
-    <p>Match History</p>
-    <div class="grid">
+    <p><h2>Match History: </u></h2></p>
+    <div class="match-container">
         {% for match in query %}
-            <div class="card">
-                <p><strong>Match ID: </strong>{{ match.match_id }}</p>
-                <p><strong>KDA: </strong>{{ match.kills }}</p>
-                <p><strong>CS: </strong>{{ match.cs }}</p>
-                <p><strong>Result: </strong>{{ "Win" if match.win else "Loss" }}</p>
-                <br/>
-            </div>
+            <a href="{{ url_for('match_details', match_id=match.match_id) }}" class="match-link">
+                <div class="match {% if match.win %}win{% else %}loss{% endif %}">
+
+                    <div class="icon-row">
+                            <img src="{{ match.champion_icon }}" class="champion-icon">
+                            <img src="{{ match.role_icon }}" class="role-icon">
+                    </div>
+                    
+                    <div class="kda">
+                        <p><strong>KDA</strong></p>
+                        <p>{{ match.kills }} / {{ match.deaths }} / {{ match.assists }}</p>
+                    </div>
+
+                    <div class="cs">
+                        <p><strong>CS</strong></p>
+                        <p>{{ match.cs }}</p>
+                    </div>
+                    
+                    <div class="match-date">
+                        <p><strong>Match Start Time</strong></p>
+                        <p>{{ match.game_start_time }}</p>
+                    </div>
+                    
+                    <div class="match-status {% if match.win %}win{% else %}loss{% endif %}">
+                        <strong>{{ "WIN" if match.win else "LOSS" }}</strong>
+                    </div>
+            
+                    <br/>
+                </div>
+            </a>
         {% endfor %}
     {% endif %}
     </div>

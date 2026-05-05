@@ -84,6 +84,7 @@ class Database():
         self.curs.execute("""SELECT 
                                 match_id,
                                 game_start_timestamp,
+                                champion_name,
                                 position,
                                 kills,
                                 deaths,

@@ -1,7 +1,6 @@
 from player_info_flask import PlayerInfo
-from match_ingester import MatchIngester
-from match_v5 import MatchV5
-from timeline import Timeline
+from match_ingester_flask import MatchIngester
+from timeline_flask import Timeline
 from dataframe import Data
 import jsonlines
 
@@ -11,8 +10,8 @@ class Session():
         self.queue = queue
         self.player = PlayerInfo(name = name, tag = tag, region = self.region)
         self.puuid = self.player.get_puuid(api_key)
-        self.match_ingester = MatchIngester(puuid = self.puuid, region = self.region, queue = self.queue)
-        self.timeline = Timeline(puuid = self.puuid, region = self.region)
+        self.match_ingester = MatchIngester(api=api_key, puuid = self.puuid, region = self.region, queue = self.queue)
+        self.timeline = Timeline(api=api_key, puuid = self.puuid, region = self.region)
         self.data = Data()
 
     def get_puuid(self):
