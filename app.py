@@ -49,9 +49,56 @@ class ChampionForm(FlaskForm):
 class UpdateForm(FlaskForm):
     update_submit = SubmitField("Update matches")
 
-
 @app.route("/", methods=["GET", "POST"])
 def Index():
+    form_settings = SettingsForm()
+    status = ""
+    bg = random_bg()
+
+    try:
+        with open("data/settings.json", "r") as file:
+            data = json.load(file)
+    except:
+        with open("data/settings.json", "w") as file:
+            data = {"riot_id": "", "tag": "", "region": "", "queue": "", "api_key": "", "puuid": ""}
+            json.dump(data, file, indent=4)
+
+
+    if request.method == "GET":
+        form_settings.riot_id.data = data["riot_id"]
+        form_settings.tag.data = data["tag"]
+        form_settings.region.data = data["region"]
+        form_settings.queue.data = data["queue"]
+
+    if form_settings.submit.data and form_settings.validate_on_submit():
+        data["riot_id"] = form_settings.riot_id.data
+        data["tag"] = form_settings.tag.data
+        data["region"] = form_settings.region.data
+        data["queue"] = form_settings.queue.data
+
+        new_api_key = form_settings.api_key.data
+        if new_api_key:
+            data["api_key"] = new_api_key
+
+        with open("data/settings.json", "w") as file:
+            json.dump(data, file)
+
+        try:
+            session = Session(name=data["riot_id"], tag=data["tag"], region=data["region"], queue=data["queue"], api_key=data["api_key"])
+            data["puuid"] = session.get_puuid()
+            with open("data/settings.json", "w") as file:
+                json.dump(data, file, indent=4)
+
+        except Exception as e:
+            print(e)
+            data["puuid"] = ""
+            status = "Cannot find player."
+
+    
+    return render_template("index.html", bg=bg, data=data, form_settings=form_settings, status=status)
+
+@app.route("/history", methods=["GET", "POST"])
+def History():
     form = ChampionForm()
     form_update = UpdateForm()
     champions = load_champions()
@@ -91,7 +138,6 @@ def Index():
 
         data = Data_Flask(rows)
         query = data.return_stats()
-        print(query)
     
     else:
         db = Database()
@@ -111,57 +157,9 @@ def Index():
 
         data = Data_Flask(rows)
         query = data.return_stats()
-        print(query)
 
-    return render_template("index.html", bg=bg, champions=champions, form=form, form_update=form_update, query=query, status=status)
+    return render_template("history.html", bg=bg, champions=champions, form=form, form_update=form_update, query=query, status=status)
 
-
-@app.route("/settings", methods=["GET", "POST"])
-def Settings():
-    form_settings = SettingsForm()
-    form_puuid = PuuidForm()
-
-    try:
-        with open("data/settings.json", "r") as file:
-            data = json.load(file)
-    except:
-        data = {"riot_id": "", "tag": "", "region": "", "queue": "", "api_key": "", "puuid": ""}
-
-    if request.method == "GET":
-        form_settings.riot_id.data = data["riot_id"]
-        form_settings.tag.data = data["tag"]
-        form_settings.region.data = data["region"]
-        form_settings.queue.data = data["queue"]
-        form_settings.api_key.data = data["api_key"]
-
-    if form_settings.submit.data and form_settings.validate_on_submit():
-        data["riot_id"] = form_settings.riot_id.data
-        data["tag"] = form_settings.tag.data
-        data["region"] = form_settings.region.data
-        data["queue"] = form_settings.queue.data
-
-        new_api_key = form_settings.api_key.data
-        if new_api_key:
-            data["api_key"] = new_api_key
-
-        with open("data/settings.json", "w") as file:
-            json.dump(data, file)
-
-    elif form_puuid.submit.data:
-        try:
-            session = Session(name=data["riot_id"], tag=data["tag"], region=data["region"], queue=data["queue"],api_key=data["api_key"])
-            with open("data/settings.json", "r") as file:
-                data = json.load(file)
-        except:
-            data = {"riot_id": "", "tag": "", "region": "", "queue": "", "api_key": "", "puuid": ""}
-        
-        data["puuid"] = session.get_puuid(api_key=data["api_key"])
-
-        with open("data/settings.json", "w") as file:
-            json.dump(data, file)
-            
-    
-    return render_template("settings.html", data=data, form_settings=form_settings, form_puuid=form_puuid)
 
 @app.route("/<match_id>")
 def match_details(match_id):

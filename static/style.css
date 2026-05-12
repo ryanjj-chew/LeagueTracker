@@ -162,7 +162,8 @@ body {
 }
 
 .champion-form,
-.update-form {
+.update-form,
+.settings-form {
     font: bold;
     background-color: rgb(26, 28, 31);
     border: 2px solid rgb(44, 97, 150);
@@ -170,7 +171,32 @@ body {
     padding: 15px;
 }
 
-.form input[type="text"] {
+.champion-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    width: fit-content;
+    min-width: 280px;
+}
+
+.settings-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.form input[type="text"],
+.form input[type="password"],
+.form select {
     background-color: rgb(49, 52, 58);
     color: aliceblue;
 
@@ -183,7 +209,13 @@ body {
     outline: none;
 }
 
-.form input[type="text"]:focus {
+.settings-form input[type="password"] {
+    width: 227px;
+}
+
+.form input[type="text"]:focus,
+.form input[type="password"]:focus,
+.form select:focus {
     background-color: rgb(49, 52, 58);
     color: aliceblue;
     border-color: rgb(44, 97, 150);
