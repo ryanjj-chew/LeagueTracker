@@ -1,12 +1,13 @@
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
+import matplotlib, matplotlib.pyplot as plt
+matplotlib.use("Agg")
 
 class Graph():
     def __init__(self):
-        sns.set_theme(style="darkgrid", palette="deep")
+        sns.set_theme(style="darkgrid", palette="deep", context="talk")
 
-    def timeline_graph(self, df):
+    def timeline_graph(self, df, match_id):
         fig, axes = plt.subplots(1, 2, figsize=(12,5))
 
         # Gold 
@@ -18,9 +19,29 @@ class Graph():
         axes[1].set_title("XP")
         axes[1].legend().remove()
 
-        return
+        axes[0].tick_params(colors="white")
+        axes[0].xaxis.label.set_color("white")
+        axes[0].yaxis.label.set_color("white")
+        axes[0].title.set_color("white")
+        axes[0].set_xlim(0)
+        axes[0].set_ylim(0)
+
+        axes[1].tick_params(colors="white")
+        axes[1].xaxis.label.set_color("white")
+        axes[1].yaxis.label.set_color("white")
+        axes[1].title.set_color("white")
+        axes[1].set_xlim(0)
+        axes[1].set_ylim(0)
+
+        fig.tight_layout()
+        sns.despine()
+
+        filename = f"static/graphs/{match_id}.png"
+        plt.savefig(filename, transparent=True, bbox_inches="tight")
+        plt.close()
+        return f"graphs/{match_id}.png"
     
-    def timeline_diff_graph(self, df):
+    def timeline_diff_graph(self, df, match_id):
         fig, axes = plt.subplots(2, 1, figsize=(12,8), sharex=True)
         
         # Gold Diff
@@ -45,7 +66,42 @@ class Graph():
         axes[1].set_xlabel("Minute")
         axes[1].set_ylabel("XP")
         
-        return
+        axes[0].tick_params(colors="white")
+        axes[0].xaxis.label.set_color("white")
+        axes[0].yaxis.label.set_color("white")
+        axes[0].title.set_color("white")
+
+        axes[1].tick_params(colors="white")
+        axes[1].xaxis.label.set_color("white")
+        axes[1].yaxis.label.set_color("white")
+        axes[1].title.set_color("white")
+
+        fig.tight_layout()
+        sns.despine()
+
+        filename = f"static/graphs/{match_id}_diff.png"
+        plt.savefig(filename, transparent=True, bbox_inches="tight")
+        plt.close()
+        return f"graphs/{match_id}_diff.png"
     
-    def plot_graphs(self):
-        plt.show()
+    def timeline_cs_graph(self, df, match_id):
+        fig, ax = plt.subplots(figsize=(10,5))
+        # CS Graph
+        sns.lineplot(data=df, x="minute", y="cs", ax=ax)
+        ax.set_title("Self CS Over Time")
+        ax.set_xlabel("Minute")
+        ax.set_ylabel("CS")
+        ax.set_xlim(0)
+        ax.set_ylim(0)
+
+        ax.tick_params(colors="white")
+        ax.xaxis.label.set_color("white")
+        ax.yaxis.label.set_color("white")
+        ax.title.set_color("white")
+
+        sns.despine()
+        
+        filename = f"static/graphs/{match_id}_cs.png"
+        plt.savefig(filename, transparent=True, bbox_inches="tight")
+        plt.close()
+        return f"graphs/{match_id}_cs.png"

@@ -7,6 +7,8 @@ from database import Database
 from session_flask import Session
 from dataframe_flask import Data_Flask
 from background_images import random_bg
+from graph import Graph
+import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "BxGWP%wez3EG&0kK£"
@@ -136,8 +138,8 @@ def History():
         rows = db.get_champion_matches(puuid=puuid, champion=champion_id)        
         db.close()
 
-        data = Data_Flask(rows)
-        query = data.return_stats()
+        data = Data_Flask()
+        query = data.return_stats(rows)
     
     else:
         db = Database()
@@ -155,16 +157,39 @@ def History():
         rows = db.get_matches(puuid=puuid)
         db.close()
 
-        data = Data_Flask(rows)
-        query = data.return_stats()
+        data = Data_Flask()
+        query = data.return_stats(rows)
 
     return render_template("history.html", bg=bg, champions=champions, form=form, form_update=form_update, query=query, status=status)
 
 
 @app.route("/<match_id>")
 def match_details(match_id):
-    print(match_id)
-    return f"{match_id}"
+    bg = random_bg()
+
+    folder = "static/graphs"
+    for file in os.listdir(folder):
+        file_path = os.path.join(folder, file)
+
+        if file.endswith(".png"):
+            os.remove(file_path)
+
+    db = Database()
+    match_timeline_rows = db.get_match_timeline(match_id)
+    db.close()
+    
+    data = Data_Flask()
+    df_wide, df_long = data.return_timeline_stats(match_timeline_rows)
+
+    graph = Graph()
+    timeline_graph_path = graph.timeline_graph(df_long, match_id)
+    diff_graph_path = graph.timeline_diff_graph(df_wide, match_id)
+    cs_graph_path = graph.timeline_cs_graph(df_wide, match_id)
+
+    return render_template("match_id.html", bg=bg, match_id=match_id, timeline_graph_path=timeline_graph_path, diff_graph_path=diff_graph_path, cs_graph_path=cs_graph_path)
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

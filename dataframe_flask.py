@@ -2,14 +2,11 @@ import pandas as pd
 import champions
 
 class Data_Flask():
-    def __init__(self, rows):
-        self.rows = rows
-
-    def return_stats(self):
-        rows = [dict(row) for row in self.rows]
+    def return_stats(self, rows):
+        rows = [dict(row) for row in rows]
         df = pd.DataFrame(rows)
         version = champions.get_latest_version()
-
+        
         if df.empty:
             return df
         
@@ -23,3 +20,21 @@ class Data_Flask():
         df["role_icon"] = ("https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-clash/global/default/assets/images/position-selector/positions/icon-position-" + df["position"].str.strip().str.lower() + "-hover.png")
 
         return df.to_dict(orient="records")
+    
+    def return_timeline_stats(self, rows):
+        rows = [dict(row) for row in rows]
+        df = pd.DataFrame(rows)
+        # Add .melt() to my df to reshape from wide form to long form data for sns
+        df_long = df.melt(
+            id_vars = "minute",
+            value_vars = ["player_team_gold", "enemy_team_gold", "player_team_xp", "enemy_team_xp"],
+            var_name = "stats",
+            value_name = "value"
+            )
+        df_long[["team", "stat"]] = df_long["stats"].str.rsplit("_", n=1, expand=True)
+        ## Mapping player team to blue and enemy team to red colors respectively for graphing
+        df_long["team"] = df_long["team"].map({
+            "player_team": "blue",
+            "enemy_team": "red"}
+        )
+        return df, df_long

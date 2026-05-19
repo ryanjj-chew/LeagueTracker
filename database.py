@@ -111,6 +111,7 @@ class Database():
                                 kills,
                                 deaths,
                                 assists,
+                                position,
                                 total_minions_killed,
                                 neutral_minions_killed,
                                 cs_before_10_minutes,

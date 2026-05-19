@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ match_id }}
+{% endblock %}
+
+{% block content %}
+    <div class="graphs">
+        <div class="graph">
+        {% if timeline_graph_path %}
+            <img src="{{ url_for('static', filename=timeline_graph_path) }}">
+        {% endif %}
+        </div>
+
+        <div class="graph">
+        {% if diff_graph_path %}
+            <img src="{{ url_for('static', filename=diff_graph_path) }}">
+        {% endif %}
+        </div>
+
+        <div class="graph">
+        {% if cs_graph_path %}
+            <img src="{{ url_for('static', filename=cs_graph_path) }}">
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}
