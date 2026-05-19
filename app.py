@@ -5,7 +5,7 @@ from wtforms import StringField, SelectField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, ValidationError
 from database import Database
 from session_flask import Session
-from dataframe_flask import Data_Flask
+from dataframe import Data_Flask
 from background_images import random_bg
 from graph import Graph
 import os
@@ -187,9 +187,6 @@ def match_details(match_id):
     cs_graph_path = graph.timeline_cs_graph(df_wide, match_id)
 
     return render_template("match_id.html", bg=bg, match_id=match_id, timeline_graph_path=timeline_graph_path, diff_graph_path=diff_graph_path, cs_graph_path=cs_graph_path)
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
