@@ -2,9 +2,13 @@ import sqlite3
 import jsonlines
 
 class Database():
-    def __init__(self, db_path = "data/matches.db"):
+    def __init__(self, db_path = "data/matches.db"):       
         self.con = sqlite3.connect(db_path)
+
+        # Allows rows to behave like dictionaries
+        # row["champion_name"] instead of row[1] for example
         self.con.row_factory = sqlite3.Row
+        
         self.curs = self.con.cursor()
 
     def create_table(self):
@@ -147,7 +151,7 @@ class Database():
         with jsonlines.open("data/match_timeline.jsonl") as reader:
             for record in reader:
                 try:
-                    for frame in record:
+                    for frame in record: ## Each frame represents 1min intervals obtained from the Riot API
                         row = (
                             frame["match_id"],
                             frame["minute"],

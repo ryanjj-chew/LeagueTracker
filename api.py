@@ -1,6 +1,7 @@
 import requests
 
-## Uses the ACCOUNT-V1 API FROM RIOT
+# Uses the ACCOUNT-V1 api from Riot
+# More information at https://developer.riotgames.com/apis
 class Functions:
     def __init__(self, api, name, tag, region):
         self.headers = {"X-Riot-Token": api}
@@ -20,7 +21,7 @@ class Functions:
     def get_puuid(self):
         account_v1_puuid_url = f"{self.region_host}/riot/account/v1/accounts/by-riot-id/{self.name}/{self.tag}"
         response = requests.get(account_v1_puuid_url, headers = self.headers)
-        if response.status_code == 200:
+        if response.status_code == 200: ## 200 = success, every other number is a fail
             return response.json()["puuid"]
         else:
             raise Exception(response.status_code, response.reason)

@@ -22,5 +22,3 @@ def save_champions():
     with open("data/champions.json", "w") as file:
         json.dump(champions, file)
     return
-
-save_champions()

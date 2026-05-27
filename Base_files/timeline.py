@@ -1,18 +1,20 @@
+import os
+from dotenv import load_dotenv
 import requests
 import time
 import jsonlines
 
 # Json data in "info" separated into "frames"
 # Each "frame" has an interval of "frameInterval" in "info[frameInterval]"
-# Within each frame, the 10 participants (players) data are stored under "participantFrames" in "info[frames][participantFrames]"
+# Within each frame, the 10 participant(players) data are stored under "participantFrames" in "info[frames][participantFrames]"
 # Within each participant frame, the relevant data for the project are:
 # "totalGold", "xp", "level", "jungleMinionsKilled" + "minionsKilled"
 
 class Timeline:
-    def __init__(self, api, puuid, region):
+    def __init__(self, puuid, region):
         self.puuid = puuid
         self.region = region
-        self.api_key = api
+        self.api_key = os.getenv("RIOT_API_KEY")
         self.headers = {"X-Riot-Token": self.api_key}
 
     def api(self, match_id):

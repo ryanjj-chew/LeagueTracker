@@ -1,5 +1,6 @@
 import random
 
+# Images obtained from League of Legends' wiki website https://wiki.leagueoflegends.com
 def random_bg():
     images = ["https://wiki.leagueoflegends.com/en-us/images/thumb/K%27Sante_EmpyreanSkin_HD.jpg/1920px-K%27Sante_EmpyreanSkin_HD.jpg?93b56", "https://wiki.leagueoflegends.com/en-us/images/Yasuo_GenesisNightbringerSkin_HD.jpg?2dc55", "https://wiki.leagueoflegends.com/en-us/images/Kayle_PrestigeEmpyreanSkin_HD.jpg?c89ca", "https://wiki.leagueoflegends.com/en-us/images/thumb/SKTT12016Skin_HD.jpg/1920px-SKTT12016Skin_HD.jpg?88614", "https://wiki.leagueoflegends.com/en-us/images/thumb/Pantheon_DragonslayerSkin_HD.jpg/1920px-Pantheon_DragonslayerSkin_HD.jpg?36d5b", "https://wiki.leagueoflegends.com/en-us/images/thumb/Aatrox_BloodMoonSkin_HD.jpg/1920px-Aatrox_BloodMoonSkin_HD.jpg?42e87", "https://wiki.leagueoflegends.com/en-us/images/thumb/BlackfrostSkin_HD.jpg/1920px-BlackfrostSkin_HD.jpg?d8bc9", "https://wiki.leagueoflegends.com/en-us/images/thumb/BloodMoonSkin_HD.jpg/1920px-BloodMoonSkin_HD.jpg?e42a2", "https://wiki.leagueoflegends.com/en-us/images/thumb/DivineDariusFallenGarenSkin_HD.jpg/1920px-DivineDariusFallenGarenSkin_HD.jpg?854b8"]
     return random.choice(images)

@@ -1,9 +1,16 @@
+import os
+from dotenv import load_dotenv
 import requests
 import time
 
 ## USES THE MATCH-V5 API FROM RIOT
 class MatchV5:
-    def __init__(self, api, puuid, region, queue):
+    def __init__(self, puuid, region, queue):
+        load_dotenv(override=True)
+        try:
+            self.api_key = os.getenv("RIOT_API_KEY")
+        except:
+            raise ValueError("No API Key")
         queue_type = {
             "ranked": 420,
             "normal": 400,
@@ -19,7 +26,7 @@ class MatchV5:
         self.queue = queue_type[queue.lower()]
         self.puuid = puuid
 
-        self.headers = {"X-Riot-Token": api}
+        self.headers = {"X-Riot-Token": self.api_key}
 
     def match_ids(self, startTime = None, endTime = None, queue = None, type = None, start = None, count = None):
         actual_queue = queue if queue is not None else self.queue
@@ -31,7 +38,6 @@ class MatchV5:
         params_str = "?" + "&".join(params) if params else ""
         api = f"{self.region}/lol/match/v5/matches/by-puuid/{self.puuid}/ids{params_str}"
         response = requests.get(api, headers = self.headers)
-        # Response code 200 means successful lookup, everything else returns an error
         if response.status_code == 200:
             return response.json()
         else:
@@ -41,7 +47,6 @@ class MatchV5:
         api = f"{self.region}/lol/match/v5/matches/{match_id}"
         response = requests.get(api, headers = self.headers)
         time.sleep(1.5) # Sleep for 1s to prevent rate limit exceeded
-        # Response code 200 means successful lookup, everything else returns an error
         if response.status_code == 200:
             return response.json()
         else:

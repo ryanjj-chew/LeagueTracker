@@ -1,14 +1,12 @@
-from match_v5_flask import MatchV5
+from match_v5 import MatchV5
 import jsonlines
 
 class MatchIngester():
-    def __init__(self, api, puuid, region, queue):
+    def __init__(self, puuid, region, queue):
         self.puuid = puuid
         self.region = region
         self.queue = queue
-        self.Player = MatchV5(api= api, puuid = self.puuid, region = self.region, queue = self.queue)
-
-        # Builds a lookup of already imported Match IDS from the json to avoid duplicate entries
+        self.Player = MatchV5(puuid = self.puuid, region = self.region, queue = self.queue)
         self.seen_match_ids = set()
         try:
             with jsonlines.open("data/match_data.jsonl", mode = "r") as reader:
@@ -22,15 +20,10 @@ class MatchIngester():
         self.wanted_stats = ("championName", "individualPosition", "kills", "deaths", "assists", "totalMinionsKilled", "neutralMinionsKilled", "win")
     
     def fetch_match(self):
-        # Stores all matches that are new (unique) and skips duplicates
-        # Returns a list of dictionaries
-
         results = []
 
         start = 0
         page_size = 20
-
-        # Riot Match V5 API returns matches in pages of page_size, until no more matches are found
         while True:
             self.match_ids = self.Player.match_ids(start = start, count = page_size)
 
@@ -44,11 +37,9 @@ class MatchIngester():
                     except:
                         raise Exception("Match fetch failed")
                     
-                    # Participants share the same index ordering in metadata.participants and info.participants
-                    # This makes lookups easier when using the PUUID to locate the index to then access the participant's stats
                     self.player_list = self.match["metadata"]["participants"]
                     player_index = None
-                    for index, participant in enumerate(self.player_list):
+                    for index, participant in enumerate(self.player_list): # Store player index
                         if participant == self.puuid:
                             player_index = index
                             break
@@ -61,8 +52,7 @@ class MatchIngester():
                     for stat in self.wanted_stats:
                         if stat in match_details:
                             wanted_match_details[stat] = match_details[stat]
-                    # Combines all forms of CS into a single stat before 10 minutes for tracking performance in the early stage of the game (Laning Phase usually)
-                    wanted_match_details["csBefore10Minutes"] = int(round(match_details.get("challenges", {}).get("jungleCsBefore10Minutes", 0))) + int(round(match_details.get("challenges", {}).get("laneMinionsFirst10Minutes", 0)))
+                    wanted_match_details["csBefore10Minutes"] = int(round(match_details.get("challenges", {}).get("jungleCsBefore10Minutes"))) + int(round(match_details.get("challenges", {}).get("laneMinionsFirst10Minutes")))
 
                     with jsonlines.open("data/match_data.jsonl", mode = "a") as writer:
                         writer.write(wanted_match_details)

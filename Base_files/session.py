@@ -1,17 +1,18 @@
-from player_info_flask import PlayerInfo
-from match_ingester_flask import MatchIngester
-from timeline_flask import Timeline
+from player_info import PlayerInfo
+from match_ingester import MatchIngester
+from match_v5 import MatchV5
+from timeline import Timeline
 from dataframe import Data
 import jsonlines
 
 class Session():
-    def __init__(self, name , tag , region, queue, api_key):
+    def __init__(self, name , tag , region, queue):
         self.region = region
         self.queue = queue
         self.player = PlayerInfo(name = name, tag = tag, region = self.region)
-        self.puuid = self.player.get_puuid(api_key)
-        self.match_ingester = MatchIngester(api=api_key, puuid = self.puuid, region = self.region, queue = self.queue)
-        self.timeline = Timeline(api=api_key, puuid = self.puuid, region = self.region)
+        self.puuid = self.player.get_puuid()
+        self.match_ingester = MatchIngester(puuid = self.puuid, region = self.region, queue = self.queue)
+        self.timeline = Timeline(puuid = self.puuid, region = self.region)
         self.data = Data()
 
     def get_puuid(self):
@@ -30,11 +31,9 @@ class Session():
         return self.timeline.stats(match_id)
     
     def update_timeline(self):
-        # Builds a lookup of already imported Match IDS from match_data.json to avoid duplicate entries
         seen_match_ids = set()
         added = 0
         skipped = 0
-
         try:
             with jsonlines.open("data/match_timeline.jsonl") as reader:
                 for record in reader:
@@ -48,10 +47,10 @@ class Session():
 
                 for record in reader:
                     match_id = record.get("matchID")
-                    #print(f"Checking match: {match_id}") # Uncomment for debugging
+                    print(f"Checking match: {match_id}")
 
                     if match_id in seen_match_ids:
-                        #print(f"Skipping: {match_id}") # Uncomment for debugging
+                        print(f"Skipping: {match_id}")
                         skipped += 1
                         continue
 
@@ -59,14 +58,13 @@ class Session():
                         timeline_stats = self.fetch_timeline(match_id)
                         writer.write(timeline_stats)
                         seen_match_ids.add(match_id)
-                        #print(f"Added timeline for {match_id}") # Uncomment for debugging
+                        print(f"Added timeline for {match_id}")
                         added += 1
 
                     except FileNotFoundError:
                         continue
-
-        status = f"Added: {added}, Skipped: {skipped}"
-        return status
+        print(f"Added: {added}, Skipped: {skipped}")
+        return
     
     def get_timeline(self, match_id):
         return self.data.return_timeline_stats(match_id)
