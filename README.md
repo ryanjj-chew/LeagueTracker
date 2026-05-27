@@ -24,8 +24,25 @@
 
 
 # Table of Contents
+- [League of Legends Stat Tracker](#league-of-legends-stat-tracker)
+  - [About the Project](#about-the-project)
+  - [Features](#features)
+  - [Built With](#built-with)
+- [Table of Contents](#table-of-contents)
 - [Getting Started](#getting-started)
-- 
+  - [Obtain a Riot API Key](#obtain-a-riot-api-key)
+  - [Prerequisites](#prerequisites)
+  - [First Time Setup](#first-time-setup)
+- [Usage](#usage)
+  - [Match History](#match-history)
+  - [Search by Champions](#search-by-champions)
+  - [Graphs](#graphs)
+    - [Gold and XP Graphs](#gold-and-xp-graphs)
+    - [Gold and XP Differential Graphs](#gold-and-xp-differential-graphs)
+    - [Self CS Over Time Graph](#self-cs-over-time-graph)
+- [Architecture](#architecture)
+- [License](#license)
+- [Disclaimer](#disclaimer)
 
 
 
