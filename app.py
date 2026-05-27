@@ -162,8 +162,7 @@ def History():
 
     return render_template("history.html", bg=bg, champions=champions, form=form, form_update=form_update, query=query, status=status)
 
-
-@app.route("/<match_id>")
+@app.route("/match/<match_id>")
 def match_details(match_id):
     bg = random_bg()
 
