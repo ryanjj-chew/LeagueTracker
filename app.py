@@ -52,7 +52,7 @@ class UpdateForm(FlaskForm):
     update_submit = SubmitField("Update matches")
 
 @app.route("/", methods=["GET", "POST"])
-def Index():
+def Settings():
     form_settings = SettingsForm()
     status = ""
     bg = random_bg()

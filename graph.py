@@ -24,6 +24,8 @@ class Graph():
         axes[0].xaxis.label.set_color("white")
         axes[0].yaxis.label.set_color("white")
         axes[0].title.set_color("white")
+        axes[0].set_xlabel("Minute")
+        axes[0].set_ylabel("Gold")
         axes[0].set_xlim(0)
         axes[0].set_ylim(0)
 
@@ -31,8 +33,12 @@ class Graph():
         axes[1].xaxis.label.set_color("white")
         axes[1].yaxis.label.set_color("white")
         axes[1].title.set_color("white")
+        axes[1].set_xlabel("Minute")
+        axes[1].set_ylabel("XP")
         axes[1].set_xlim(0)
         axes[1].set_ylim(0)
+
+        axes[0].legend(title="Team")
 
         fig.tight_layout()
         sns.despine()
