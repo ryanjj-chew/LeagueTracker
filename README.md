@@ -1,6 +1,7 @@
 # League of Legends Stat Tracker
 
 ## About the Project
+![Main](Readme_Assets/Main.png)  
 **League of Legends Stat Tracker** is a local analytics application that collects match data through the Riot APIs, stores it in a SQLite database, and provides a Flask web interface for viewing statistics and visualising performance.
 
 
@@ -41,6 +42,7 @@
       - [Gold and XP Differential Graphs](#gold-and-xp-differential-graphs)
       - [Self CS Over Time Graph](#self-cs-over-time-graph)
   - [Architecture](#architecture)
+  - [Project Structure](#project-structure)
   - [License](#license)
   - [Disclaimer](#disclaimer)
 
@@ -168,6 +170,26 @@ Seaborn + Matplotlib Graphs
 Flask Web Interface
 ```
 It uses a fully modular structure with each module of the pipeline separate from one another. This allows easier debugging and understanding of the purpose of each code section.
+
+## Project Structure
+```text
+LeagueTracker/
+|
+|-- app.py                      # Flask application
+|-- api.py                      # Base API for finding PUUID
+|-- database.py                 # SQLite database processes
+|-- dataframe.py                # Pandas data processing
+|-- graph.py                    # Graph Generation
+|-- session_flask.py            # Session/Update Pipeline
+|-- match_ingester_flask.py     # Stores matches from API
+|
+|-- templates/                  # Jinja2 HTML templates
+|-- static/                     # CSS and graphs
+|-- data/                       # SQLite DB and JSON data
+|
+|-- requirements.txt
+|-- README.md
+```
 
 ## License
 This project is licensed under the MIT License.
