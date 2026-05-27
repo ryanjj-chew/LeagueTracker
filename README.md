@@ -23,34 +23,34 @@
 ![CSS](https://img.shields.io/badge/css-%23663399.svg?style=for-the-badge&logo=css&logoColor=white)
 
 
-# Table of Contents
+## Table of Contents
 - [League of Legends Stat Tracker](#league-of-legends-stat-tracker)
   - [About the Project](#about-the-project)
   - [Features](#features)
   - [Built With](#built-with)
-- [Table of Contents](#table-of-contents)
-- [Getting Started](#getting-started)
-  - [Obtain a Riot API Key](#obtain-a-riot-api-key)
-  - [Prerequisites](#prerequisites)
-  - [First Time Setup](#first-time-setup)
-- [Usage](#usage)
-  - [Match History](#match-history)
-  - [Search by Champions](#search-by-champions)
-  - [Graphs](#graphs)
-    - [Gold and XP Graphs](#gold-and-xp-graphs)
-    - [Gold and XP Differential Graphs](#gold-and-xp-differential-graphs)
-    - [Self CS Over Time Graph](#self-cs-over-time-graph)
-- [Architecture](#architecture)
-- [License](#license)
-- [Disclaimer](#disclaimer)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Obtain a Riot API Key](#obtain-a-riot-api-key)
+    - [Prerequisites](#prerequisites)
+    - [First Time Setup](#first-time-setup)
+  - [Usage](#usage)
+    - [Match History](#match-history)
+    - [Search by Champions](#search-by-champions)
+    - [Graphs](#graphs)
+      - [Gold and XP Graphs](#gold-and-xp-graphs)
+      - [Gold and XP Differential Graphs](#gold-and-xp-differential-graphs)
+      - [Self CS Over Time Graph](#self-cs-over-time-graph)
+  - [Architecture](#architecture)
+  - [License](#license)
+  - [Disclaimer](#disclaimer)
 
 
 
-# Getting Started
+## Getting Started
 
 To get a local copy running, follow these steps.
 
-## Obtain a Riot API Key
+### Obtain a Riot API Key
 
 1. Create a Riot Account and login to: https://developer.riotgames.com/
 
@@ -58,7 +58,7 @@ To get a local copy running, follow these steps.
 ![Regenerate Api Key](Readme_Assets/Regenerate_api_key.jpg)
 > Take note: the Riot API Key expires every 24 hours, so it must be regenerated every 24 hours to use the application. There is no workaround as it is a personal API key. Read more: https://developer.riotgames.com/docs/portal and https://developer.riotgames.com/docs/lol
 
-## Prerequisites
+### Prerequisites
 1. Install Python 3+ (Preferably the latest version) from: [Python Download Link](https://www.python.org/downloads/)
 
 2. Clone the repository:  
@@ -95,35 +95,35 @@ python app.py
 http://127.0.0.1:5000
 ```
 
-## First Time Setup
+### First Time Setup
 1. Open the `Settings` Page from the Navigation Bar:  
 ![Nav](Readme_Assets/Navigation.png)
 
-2. Enter your Player Details and the Previously Stored API key:  
+1. Enter your Player Details and the Previously Stored API key:  
 ![Details](Readme_Assets/Details.jpg)
 
-3. Click `Save Settings` below Api Key:  
+1. Click `Save Settings` below Api Key:  
 ![Save](Readme_Assets/Save.jpg)
 
-4. Go to the `History` Page from the Navigation Bar:  
+1. Go to the `History` Page from the Navigation Bar:  
 ![Nav](Readme_Assets/Navigation.png)
 
-5. No matches will be found initially. Click `Update Matches`:  
+1. No matches will be found initially. Click `Update Matches`:  
 ![Update](Readme_Assets/Update.png)  
 
-6. Do not leave the page until `Added: X, Skipped: Y` appears below `Update Matches`:  
+1. Do not leave the page until `Added: X, Skipped: Y` appears below `Update Matches`:  
 ![Updated](Readme_Assets/Updated.png)  
 > The updating of matches takes a while  because Riot API rate limits the searches to 20 requests every 1 seconds(s), or 100 requests every 2 minutes(s).
 
-# Usage
-## Match History
+## Usage
+### Match History
 
 By default, all previous matches played will be displayed and sorted by most recent.  
   
 ![History](Readme_Assets/History.png)  
 
 
-## Search by Champions
+### Search by Champions
 
 With the search box, type any champion to get the list of matches played with that specific champion.  
   
@@ -134,20 +134,20 @@ It will then display all matches played with that specific champion sorted by mo
 Here is an example with the champion `Smolder`:
 ![Specific](Readme_Assets/Specific.png)
 
-## Graphs
+### Graphs
 Click on any match to view the more in-depth statistics:  
 ![Graphs](Readme_Assets/Graph.png)
 
-### Gold and XP Graphs
+#### Gold and XP Graphs
 Each graph represents each team's gold and xp throughout the match. Blue refers to your team, Red refers to the enemy team.
 
-### Gold and XP Differential Graphs
+#### Gold and XP Differential Graphs
 Each graph shows the net difference in gold and xp, where a positive number means your team has more gold/xp than the enemy team, and vice versa.
 
-### Self CS Over Time Graph
+#### Self CS Over Time Graph
 The graph shows your personal CS (Creep Score) over the game's duration, useful for seeing downtime and inefficiencies across the game.
 
-# Architecture
+## Architecture
 The following shows the pipeline of the entire project:
 ```text
 Riot API
@@ -169,8 +169,8 @@ Flask Web Interface
 ```
 It uses a fully modular structure with each module of the pipeline separate from one another. This allows easier debugging and understanding of the purpose of each code section.
 
-# License
+## License
 This project is licensed under the MIT License.
 
-# Disclaimer
+## Disclaimer
 League Stat Tracker is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc
