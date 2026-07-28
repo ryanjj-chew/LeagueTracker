@@ -9,9 +9,18 @@ from dataframe import Data_Flask
 from background_images import random_bg
 from graph import Graph
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "BxGWP%wez3EG&0kK£"
+
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    raise RuntimeError(
+        "Secret Key not found."
+    )
+app.config["SECRET_KEY"] = secret_key
 
 def load_champions():
     with open("data/champions.json", "r") as file:
